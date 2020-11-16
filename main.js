@@ -7,9 +7,15 @@ var fs = require('fs');
 const port = 80;
 var clients = [];
 
-app.get('/', function(_req, res) {
-    res.sendFile(__dirname + '/index.html');
-})
+// app.get('/', function(_req, res) {
+//     res.sendFile(__dirname + '/index.html');
+// });
+
+// app.get('/style.css', function(_req, res) {
+//   res.sendFile(__dirname + "/" + "style.css");
+// });
+
+app.use(express.static('public'));
 
 function errorHandler (err, _req, res, _next) {
   res.status(500);

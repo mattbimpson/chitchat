@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node main.js",
     "start:server": "nohup node main.js &",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "less": "lessc styles.less public/styles.css"
   },
   "repository": {
     "type": "git",
@@ -25,5 +26,8 @@
     "fs": "0.0.1-security",
     "jquery": "^3.5.1",
     "socket.io": "^3.0.1"
+  },
+  "devDependencies": {
+    "less": "^3.12.2"
   }
 }

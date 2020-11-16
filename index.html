@@ -1,0 +1,89 @@
+<!doctype html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<html>
+  <head>
+    <title>chitchat</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      input { color: black; padding: 20px; border-radius: 20px; outline: none; }
+      .standard { font: 13px Helvetica, Arial; background: #7a7978; color: black; }
+      button { padding: 20px; border-radius: 20px; }
+      #content { height: 80%; overflow-y: scroll; }
+      #sendForm { background: #7a7978; position: sticky; bottom: 0; display: inline-flex; width: 100%;align-items: center;margin-top:10px;}
+      #sendForm input { background: #87cbac; border: 0; width: 300px; height: 100%;margin-right:20px;}
+      #sendForm button { background: rgb(130, 224, 255); border: none;;width: 70px; height: 100%; }
+      #messages { list-style-type: none; margin: 0; padding: 0; font-size: 2em; min-height: 200px; padding-top: 5px; }
+      #messages li { padding: 5px 10px; }
+      #messages li:nth-child(odd) { background: #8ac4ff; }
+      #nicknames { width: 100%; font-size: 2em; }
+      #setNicknameForm input { background: #87cbac; width: 65%; border: 0; }
+      #setNicknameForm button { background: rgb(130, 224, 255); border: none; }
+      .footer { position:fixed; bottom:0;margin-top:20px;font-size:10pt;}
+    </style>
+    <script src="/socket.io/socket.io.min.js"></script>
+    <script src="/jquery/jquery.min.js"></script>
+  </head>
+  <script>
+    function disableMessages() {
+      $("#message-input").hide();
+      $("#btnSend").hide();
+    }
+    function showMessages() {
+      $("#message-input").show();
+      $("#btnSend").show();
+    }
+    function disableUsername() {
+      $("#nickname").hide();
+      $("#btnNickname").hide();
+    }
+    function showUsername() {
+      $("#nickname").show();
+      $("#btnNickname").show();
+    }
+    $(function () {
+        var socket = io();
+        disableMessages();
+        $('#sendForm').submit(function(){
+          socket.emit('chat message', $('#message-input').val());
+          $('#message-input').val('');
+          return false;
+        });
+        socket.on('chat message', function(msg){
+          $('#messages').append($('<li>').text(msg));
+          $('#bottom')[0].scrollIntoView(false);
+        });
+        socket.on('notification', function(msg) {
+          $('#messages').append($('<li>').text(msg));
+        });
+        $('#setNicknameForm').submit(function() {
+          socket.emit('send-nickname', $('#nickname').val());
+          $('#nickname').val('');
+          showMessages();
+          disableUsername();
+          $("#header").html("Messages:");
+          return false;
+        });
+    });
+  </script>
+  <body class="standard">
+    <div id="content">
+        <div id="nicknames">
+            <p id="header">Enter a username: </p>
+            <p id="nicknameError"></p>
+            <form id="setNicknameForm">
+              <input size="35" id="nickname" autocomplete="off"></input>
+              <button id="btnNickname">Enter</button>
+            </form>
+          </div>
+          <ul id="messages"></ul>
+          <div id='bottom'>
+            <form action="" id="sendForm">
+              <input id="message-input" autocomplete="off" /><button id="btnSend">Send</button>
+            </form>
+          </div>
+    </div>
+    <div class="footer">
+      <p>2020 chitchat have a nice day.</p>
+    </div>
+  </body>
+</html>

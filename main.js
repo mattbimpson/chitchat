@@ -27,7 +27,7 @@ io.on('connection', function(socket) {
           return
         };
         var name = socket.nickname || 'unknown';
-        io.emit('chat message', name + ': ' + msg);
+        io.emit('chat message', `${name}: ${msg}`);
         LogMessage(name, msg);
     })
 
@@ -39,31 +39,31 @@ io.on('connection', function(socket) {
         clients.push({nickname: socket.nickname, id: socket.id});
         UpdateClientNickname(socket.id, socket.nickname);
 
-        var msg = 'User ' + socket.nickname + ' is in the house...';
+        var msg = `User  ${socket.nickname} is in the house...`;
         io.emit('notification', msg);
     })
-})
+});
 
 http.listen(port, function() {
-    console.log('listenening on port ' + port);
-})
+    console.log(`listenening on port ${port}`);
+});
 
 function UpdateClientNickname(id, name) {
     clients.forEach(function(c) {
         if (c.id === id) {
             c.nickname = name;
         }
-    })
+    });
 }
 
 function LogMessage(nickname, message) {
-    fs.appendFile('chat.txt', GetDateTime() + ',' + nickname + ',' + message + '\r\n', function(_err) {});
+    fs.appendFile('chat.txt', `${GetDateTime()},${nickname},${message}\r\n`, function(_err) {});
 }
 
 function GetDateTimeShort(datetime) {
-  var dateStr = datetime.getFullYear() + '-' + parseInt(datetime.getMonth() + 1) + '-' + datetime.getDate();
-  var timeStr = datetime.getHours() + ':' + datetime.getMinutes() + ':' + datetime.getSeconds();
-  return dateStr + ' ' + timeStr;
+  var dateStr =  `${datetime.getFullYear()}-${parseInt(datetime.getMonth() + 1)}-${datetime.getDate()}`;
+  var timeStr = `${datetime.getHours()}:${datetime.getMinutes()}:${datetime.getSeconds()}`;
+  return `${dateStr} ${timeStr}`;
 }
 
 function GetDateTime() {
